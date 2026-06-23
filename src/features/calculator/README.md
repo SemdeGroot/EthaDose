@@ -1,5 +1,5 @@
 # Calculator Feature
 
-Placeholder for the ethanol antidote calculator feature.
+Ethanol antidote calculator feature for cAlcohol.
 
-The scaffold intentionally contains no clinical formula implementation yet. When the feature is implemented, keep spreadsheet-derived constants and formulas in typed modules with unit tests against the original spreadsheet examples.
+The formula implementation lives in typed TypeScript modules and is covered by unit tests against the verified source examples. UI formatting stays separate from raw numeric calculations.

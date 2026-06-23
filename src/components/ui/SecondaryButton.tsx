@@ -4,16 +4,14 @@ import type { LucideIcon } from "lucide-react-native";
 import { AppIcon } from "./AppIcon";
 import { useTheme } from "@/state/theme";
 
-export default function PrimaryButton({
+export default function SecondaryButton({
   title,
   onPress,
-  disabled = false,
   icon,
   style,
 }: {
   title: string;
   onPress: () => void;
-  disabled?: boolean;
   icon?: LucideIcon;
   style?: ViewStyle;
 }) {
@@ -22,7 +20,6 @@ export default function PrimaryButton({
   return (
     <Pressable
       onPress={onPress}
-      disabled={disabled}
       style={({ pressed }) => [
         {
           minHeight: 48,
@@ -32,23 +29,20 @@ export default function PrimaryButton({
           gap: theme.space.sm,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: disabled ? theme.primaryDisabled : pressed ? theme.primaryDark : theme.primary,
-          opacity: disabled ? 0.7 : 1,
-          ...(Platform.OS === "web" && !disabled
-            ? {
-                cursor: "pointer",
-              }
-            : null),
+          backgroundColor: pressed ? theme.panelSoft : theme.panel,
+          borderWidth: 1,
+          borderColor: theme.border,
+          ...(Platform.OS === "web" ? { cursor: "pointer" } : null),
         },
         style,
       ]}
     >
       {icon ? (
         <View style={{ marginTop: 1 }}>
-          <AppIcon icon={icon} size={18} color={theme.textButton} />
+          <AppIcon icon={icon} size={18} color={theme.primaryDark} />
         </View>
       ) : null}
-      <Text style={{ color: theme.textButton, fontFamily: theme.fonts.bold, fontSize: 15 }}>
+      <Text style={{ color: theme.primaryDark, fontFamily: theme.fonts.bold, fontSize: 15 }}>
         {title}
       </Text>
     </Pressable>

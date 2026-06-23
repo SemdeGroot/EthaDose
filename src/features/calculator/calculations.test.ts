@@ -1,0 +1,114 @@
+import {
+  CalculatorInputError,
+  calculateEthanolDosing,
+  calculateLoadingDoseMg,
+  calculateMaintenanceDoseMgPerHour,
+  convertMgToInfusionMl,
+  parseDrinkerStatus,
+} from "./calculations";
+
+describe("ethanol dosing calculations", () => {
+  it("matches the non-drinker spreadsheet example", () => {
+    const result = calculateEthanolDosing({
+      weightKg: 65,
+      currentEthanolMgPerL: 800,
+      drinkerStatus: "nonDrinker",
+      dialysis: false,
+    });
+
+    expect(result.loadingDose.mg).toBeCloseTo(7800, 10);
+    expect(result.loadingDose.ml).toBeCloseTo(61.5789473684211, 10);
+    expect(result.maintenanceDose.mgPerHour).toBeCloseTo(4283.83128295255, 10);
+    expect(result.maintenanceDose.mlPerHour).toBeCloseTo(33.8197206548885, 10);
+    expect(result.dialysisMaintenanceDose.mgPerHour).toBeCloseTo(12851.4938488576, 10);
+    expect(result.dialysisMaintenanceDose.mlPerHour).toBeCloseTo(101.459161964666, 10);
+    expect(result.selectedMaintenanceDose).toBe(result.maintenanceDose);
+  });
+
+  it("matches the chronic drinker spreadsheet example", () => {
+    const result = calculateEthanolDosing({
+      weightKg: 82,
+      currentEthanolMgPerL: 800,
+      drinkerStatus: "chronicDrinker",
+      dialysis: true,
+    });
+
+    expect(result.loadingDose.mg).toBeCloseTo(9840, 10);
+    expect(result.loadingDose.ml).toBeCloseTo(77.6842105263158, 10);
+    expect(result.maintenanceDose.mgPerHour).toBeCloseTo(12609.841827768, 10);
+    expect(result.maintenanceDose.mlPerHour).toBeCloseTo(99.5513828508001, 10);
+    expect(result.dialysisMaintenanceDose.mgPerHour).toBeCloseTo(23418.2776801406, 10);
+    expect(result.dialysisMaintenanceDose.mlPerHour).toBeCloseTo(184.881139580057, 10);
+    expect(result.selectedMaintenanceDose).toBe(result.dialysisMaintenanceDose);
+  });
+
+  it("calculates maintenance dose without dialysis", () => {
+    expect(calculateMaintenanceDoseMgPerHour(65, 75)).toBeCloseTo(4283.83128295255, 10);
+  });
+
+  it("calculates maintenance dose with dialysis clearance", () => {
+    expect(calculateMaintenanceDoseMgPerHour(65, 75 + 150)).toBeCloseTo(12851.4938488576, 10);
+  });
+
+  it("converts mg ethanol to ml infusion solution", () => {
+    expect(convertMgToInfusionMl(7800)).toBeCloseTo(61.5789473684211, 10);
+  });
+
+  it("clamps loading dose to zero at or above target concentration", () => {
+    expect(calculateLoadingDoseMg(65, 1000)).toBe(0);
+    expect(calculateLoadingDoseMg(65, 1200)).toBe(0);
+  });
+
+  it("rejects missing weight", () => {
+    expect(() =>
+      calculateEthanolDosing({
+        currentEthanolMgPerL: 800,
+        drinkerStatus: "nonDrinker",
+        dialysis: false,
+      }),
+    ).toThrow(CalculatorInputError);
+  });
+
+  it("rejects zero or negative weight", () => {
+    expect(() =>
+      calculateEthanolDosing({
+        weightKg: 0,
+        currentEthanolMgPerL: 800,
+        drinkerStatus: "nonDrinker",
+        dialysis: false,
+      }),
+    ).toThrow(CalculatorInputError);
+
+    expect(() =>
+      calculateEthanolDosing({
+        weightKg: -1,
+        currentEthanolMgPerL: 800,
+        drinkerStatus: "nonDrinker",
+        dialysis: false,
+      }),
+    ).toThrow(CalculatorInputError);
+  });
+
+  it("rejects negative ethanol concentration", () => {
+    expect(() =>
+      calculateEthanolDosing({
+        weightKg: 65,
+        currentEthanolMgPerL: -1,
+        drinkerStatus: "nonDrinker",
+        dialysis: false,
+      }),
+    ).toThrow(CalculatorInputError);
+  });
+
+  it("rejects unsupported drinker status from external input", () => {
+    expect(() => parseDrinkerStatus("unknown")).toThrow(CalculatorInputError);
+    expect(() =>
+      calculateEthanolDosing({
+        weightKg: 65,
+        currentEthanolMgPerL: 800,
+        drinkerStatus: "unknown" as never,
+        dialysis: false,
+      }),
+    ).toThrow(CalculatorInputError);
+  });
+});
