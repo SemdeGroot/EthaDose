@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build:web"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Serve generated static files as-is; fall back to the app shell for any
+# unmatched path so client-side routes still resolve on direct load.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
