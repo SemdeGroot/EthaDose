@@ -122,36 +122,39 @@ export function CalculatorScreen() {
                   onChangeText={setCurrentEthanolMgPerL}
                 />
 
-                <SegmentedControl
-                  label="Patiëntprofiel"
-                  value={drinkerStatus}
-                  options={[
-                    { value: "nonDrinker", label: "Niet-drinker" },
-                    { value: "chronicDrinker", label: "Chronische drinker" },
-                  ]}
-                  onChange={setDrinkerStatus}
-                />
-                <InlineNotice
-                  icon={Info}
-                  text={`${DRINKER_PROFILES[drinkerStatus].label}: Vmax = ${DRINKER_PROFILES[drinkerStatus].vmaxMgKgHour} mg/kg/uur. Dit bepaalt de onderhoudsdosering.`}
-                />
-
-                <SegmentedControl
-                  label="Dialyse"
-                  value={dialysis ? "yes" : "no"}
-                  options={[
-                    { value: "no", label: "Nee" },
-                    { value: "yes", label: "Ja" },
-                  ]}
-                  onChange={(value) => setDialysis(value === "yes")}
-                />
-
-                {dialysis ? (
-                  <InlineNotice
-                    icon={Activity}
-                    text={`Bij dialyse wordt ${CALCULATOR_CONSTANTS.dialysisClearanceMgKgHour} mg/kg/uur extra klaring bij Vmax opgeteld.`}
+                <View style={{ gap: theme.space.sm }}>
+                  <SegmentedControl
+                    label="Patiëntprofiel"
+                    value={drinkerStatus}
+                    options={[
+                      { value: "nonDrinker", label: "Niet-drinker" },
+                      { value: "chronicDrinker", label: "Chronische drinker" },
+                    ]}
+                    onChange={setDrinkerStatus}
                   />
-                ) : null}
+                  <InlineNotice
+                    icon={Info}
+                    text={`Vmax ${DRINKER_PROFILES[drinkerStatus].vmaxMgKgHour} mg/kg/uur bepaalt de onderhoudsdosering.`}
+                  />
+                </View>
+
+                <View style={{ gap: theme.space.sm }}>
+                  <SegmentedControl
+                    label="Dialyse"
+                    value={dialysis ? "yes" : "no"}
+                    options={[
+                      { value: "no", label: "Nee" },
+                      { value: "yes", label: "Ja" },
+                    ]}
+                    onChange={(value) => setDialysis(value === "yes")}
+                  />
+                  {dialysis ? (
+                    <InlineNotice
+                      icon={Activity}
+                      text={`Tijdens dialyse telt cAlcohol ${CALCULATOR_CONSTANTS.dialysisClearanceMgKgHour} mg/kg/uur extra klaring bij Vmax op.`}
+                    />
+                  ) : null}
+                </View>
 
                 {hasInput ? (
                   <SecondaryButton
@@ -187,33 +190,27 @@ export function CalculatorScreen() {
                         secondary={
                           result.loadingDose.mg === 0
                             ? `Gemeten ethanol is op of boven ${CALCULATOR_CONSTANTS.targetEthanolMgPerL} mg/L.`
-                            : `${formatMl(result.loadingDose.ml)} van het ethanol/glucose-infuus`
+                            : formatMl(result.loadingDose.ml)
                         }
                       />
                       <ResultRow
                         title={dialysis ? "Onderhoud tijdens dialyse" : "Onderhoudsdosering"}
                         primary={formatMgPerHour(result.selectedMaintenanceDose.mgPerHour)}
-                        secondary={`${formatMlPerHour(result.selectedMaintenanceDose.mlPerHour)} van het ethanol/glucose-infuus`}
+                        secondary={formatMlPerHour(result.selectedMaintenanceDose.mlPerHour)}
                         emphasized
                       />
                       {dialysis ? (
                         <ResultRow
                           title="Onderhoud zonder dialyse"
                           primary={formatMgPerHour(result.maintenanceDose.mgPerHour)}
-                          secondary={`${formatMlPerHour(result.maintenanceDose.mlPerHour)} van het ethanol/glucose-infuus`}
+                          secondary={formatMlPerHour(result.maintenanceDose.mlPerHour)}
+                          divider={false}
                         />
                       ) : null}
-                      <InfusionBasis />
-                      <InlineNotice
-                        icon={Info}
-                        text={`Profiel: ${DRINKER_PROFILES[drinkerStatus].label}. Gebruikte streefconcentratie: ${CALCULATOR_CONSTANTS.targetEthanolMgPerL} mg/L.`}
-                      />
+                      <InfusionBasis profileLabel={DRINKER_PROFILES[drinkerStatus].label} />
                     </>
                   ) : (
-                    <AppText color="textSub">
-                      Vul het gewicht en de gemeten ethanolconcentratie in. De dosering verschijnt zodra beide waarden
-                      geldig zijn.
-                    </AppText>
+                    <EmptyResult />
                   )}
                 </View>
               </Panel>
@@ -356,27 +353,52 @@ function ResultRow({
   primary,
   secondary,
   emphasized = false,
+  divider = true,
 }: {
   title: string;
   primary: string;
   secondary: string;
   emphasized?: boolean;
+  divider?: boolean;
 }) {
   const theme = useTheme();
+
+  if (emphasized) {
+    return (
+      <View
+        style={{
+          gap: theme.space.xs,
+          padding: theme.space.md,
+          borderRadius: theme.radius.lg,
+          backgroundColor: theme.primarySoft,
+        }}
+      >
+        <AppText variant="bodySm" color="textSub" weight="semibold">
+          {title}
+        </AppText>
+        <AppText variant="titleXl" weight="bold" color="primaryDark">
+          {primary}
+        </AppText>
+        <AppText variant="bodySm" color="textSub">
+          {secondary}
+        </AppText>
+      </View>
+    );
+  }
 
   return (
     <View
       style={{
         gap: theme.space.xs,
         paddingVertical: theme.space.md,
-        borderBottomWidth: 1,
+        borderBottomWidth: divider ? 1 : 0,
         borderBottomColor: theme.border,
       }}
     >
       <AppText variant="bodySm" color="textSub" weight="semibold">
         {title}
       </AppText>
-      <AppText variant={emphasized ? "titleMd" : "bodyMd"} weight="bold">
+      <AppText variant="bodyMd" weight="bold">
         {primary}
       </AppText>
       <AppText variant="bodySm" color="textSub">
@@ -386,7 +408,7 @@ function ResultRow({
   );
 }
 
-function InfusionBasis() {
+function InfusionBasis({ profileLabel }: { profileLabel: string }) {
   const theme = useTheme();
 
   return (
@@ -397,8 +419,24 @@ function InfusionBasis() {
       }}
     >
       <AppText variant="caption" color="textSub">
-        Infuusbasis: {formatMg(CALCULATOR_CONSTANTS.ethanolStockMg)} ethanol in{" "}
-        {formatMl(CALCULATOR_CONSTANTS.infusionVolumeMl)} totaalvolume. Bereid uit 50 ml ethanol 96% v/v.
+        Alle ml-waarden gelden voor het ethanol/glucose-infuus: {formatMg(CALCULATOR_CONSTANTS.ethanolStockMg)} ethanol
+        in {formatMl(CALCULATOR_CONSTANTS.infusionVolumeMl)} totaalvolume, bereid uit 50 ml ethanol 96% v/v.
+      </AppText>
+      <AppText variant="caption" color="textSub">
+        Profiel: {profileLabel}. Streefconcentratie: {CALCULATOR_CONSTANTS.targetEthanolMgPerL} mg/L.
+      </AppText>
+    </View>
+  );
+}
+
+function EmptyResult() {
+  const theme = useTheme();
+
+  return (
+    <View style={{ alignItems: "center", gap: theme.space.sm, paddingVertical: theme.space.xl }}>
+      <AppIcon icon={Calculator} size={28} color={theme.muted} />
+      <AppText color="textSub" style={{ textAlign: "center", maxWidth: 320 }}>
+        Vul gewicht en gemeten ethanolconcentratie in. De dosering verschijnt zodra beide waarden geldig zijn.
       </AppText>
     </View>
   );
