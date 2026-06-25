@@ -1,11 +1,10 @@
 // Validation dataset for the /validatie page.
 //
-// The expected values below are taken verbatim from the source spreadsheet
-// (context/EtOHcalc.XLS, worksheet Blad1; see context/EtOHcalc.md) and the
-// source article (Touw et al., Pharmaceutisch Weekblad 1993). The page computes
-// the actual values live with the same functions the calculator uses and
-// compares them against these documented values, so anyone can verify that the
-// deployed build reproduces the source exactly.
+// The formulas and constants come from the article (Touw et al., Pharmaceutisch
+// Weekblad 1993). The first case is the worked example from the article itself
+// (a 12 kg child). The other cases apply the same formulas to other profiles.
+// The page computes the actual values live with the same functions the
+// calculator uses and shows the worked formulas so anyone can recompute by hand.
 
 import {
   calculateEthanolDosing,
@@ -23,8 +22,9 @@ export type ValidationMetric = {
 export type ValidationCaseResult = {
   id: string;
   title: string;
-  source: string;
   inputSummary: string;
+  formulas: string[];
+  note?: string;
   metrics: ValidationMetric[];
   pass: boolean;
 };
@@ -32,16 +32,15 @@ export type ValidationCaseResult = {
 type ValidationCase = {
   id: string;
   title: string;
-  source: string;
   inputSummary: string;
+  formulas: string[];
+  note?: string;
+  includeDialysis: boolean;
   input: CalculatorInput;
   expected: {
     loadingMg: number;
-    loadingMl: number;
     maintenanceMgPerHour: number;
-    maintenanceMlPerHour: number;
     dialysisMaintenanceMgPerHour: number;
-    dialysisMaintenanceMlPerHour: number;
   };
 };
 
@@ -51,11 +50,39 @@ const TOLERANCE = 1e-6;
 
 const CASES: ValidationCase[] = [
   {
+    id: "article",
+    title: "Casus uit het artikel (kind van 12 kg)",
+    inputSummary:
+      "Voorbeeld uit Touw et al. (1993): kind van 12 kg, niet-drinker, Vd 0,6 L/kg, streef 1000 mg/L. Op het moment van doseren is de ethanolconcentratie circa 600 mg/L.",
+    formulas: [
+      "Oplaaddosis = Vd x gewicht x (Cdoel - Cethanol) = 0,6 x 12 x (1000 - 600) = 2880 mg",
+      "Onderhoud = 1000 x Vmax x gewicht / (Km + Cdoel) = 1000 x 75 x 12 / (138 + 1000) = 790,86 mg/uur",
+    ],
+    note: "Het artikel toont een oplaaddosis van 2880 mg en rondt de onderhoudsdosering af naar 800 mg/uur. AlcoTox toont de onafgeronde waarde.",
+    includeDialysis: false,
+    input: {
+      weightKg: 12,
+      currentEthanolMgPerL: 600,
+      drinkerStatus: "nonDrinker",
+      dialysis: false,
+    },
+    expected: {
+      loadingMg: 2880,
+      maintenanceMgPerHour: 790.8611599297012,
+      dialysisMaintenanceMgPerHour: 0,
+    },
+  },
+  {
     id: "non-drinker",
-    title: "Niet-drinker",
-    source: "EtOHcalc.XLS, Blad1, niet-drinker blok (B19-H23)",
+    title: "Niet-drinker (65 kg)",
     inputSummary:
       "Gewicht 65 kg, gemeten ethanol 800 mg/L, niet-drinker (Vmax 75 mg/kg/uur), Vd 0,6 L/kg, streef 1000 mg/L.",
+    formulas: [
+      "Oplaaddosis = Vd x gewicht x (Cdoel - Cethanol) = 0,6 x 65 x (1000 - 800) = 7800 mg",
+      "Onderhoud = 1000 x Vmax x gewicht / (Km + Cdoel) = 1000 x 75 x 65 / (138 + 1000) = 4283,83 mg/uur",
+      "Onderhoud bij dialyse = 1000 x (Vmax + 150) x gewicht / (Km + Cdoel) = 1000 x (75 + 150) x 65 / (138 + 1000) = 12851,49 mg/uur",
+    ],
+    includeDialysis: true,
     input: {
       weightKg: 65,
       currentEthanolMgPerL: 800,
@@ -64,19 +91,21 @@ const CASES: ValidationCase[] = [
     },
     expected: {
       loadingMg: 7800,
-      loadingMl: 61.5789473684211,
       maintenanceMgPerHour: 4283.83128295255,
-      maintenanceMlPerHour: 33.8197206548885,
       dialysisMaintenanceMgPerHour: 12851.4938488576,
-      dialysisMaintenanceMlPerHour: 101.459161964666,
     },
   },
   {
     id: "chronic-drinker",
-    title: "Chronische drinker",
-    source: "EtOHcalc.XLS, Blad1, chronische-drinker blok (B29-H33)",
+    title: "Chronische drinker (82 kg)",
     inputSummary:
       "Gewicht 82 kg, gemeten ethanol 800 mg/L, chronische drinker (Vmax 175 mg/kg/uur), Vd 0,6 L/kg, streef 1000 mg/L.",
+    formulas: [
+      "Oplaaddosis = Vd x gewicht x (Cdoel - Cethanol) = 0,6 x 82 x (1000 - 800) = 9840 mg",
+      "Onderhoud = 1000 x Vmax x gewicht / (Km + Cdoel) = 1000 x 175 x 82 / (138 + 1000) = 12609,84 mg/uur",
+      "Onderhoud bij dialyse = 1000 x (Vmax + 150) x gewicht / (Km + Cdoel) = 1000 x (175 + 150) x 82 / (138 + 1000) = 23418,28 mg/uur",
+    ],
+    includeDialysis: true,
     input: {
       weightKg: 82,
       currentEthanolMgPerL: 800,
@@ -85,11 +114,8 @@ const CASES: ValidationCase[] = [
     },
     expected: {
       loadingMg: 9840,
-      loadingMl: 77.6842105263158,
       maintenanceMgPerHour: 12609.841827768,
-      maintenanceMlPerHour: 99.5513828508001,
       dialysisMaintenanceMgPerHour: 23418.2776801406,
-      dialysisMaintenanceMlPerHour: 184.881139580057,
     },
   },
 ];
@@ -106,43 +132,34 @@ function metric(
 
 export function runValidation(): ValidationCaseResult[] {
   return CASES.map((testCase) => {
-    // The spreadsheet block lists both the regular and the dialysis maintenance
-    // dose, so read both from the result regardless of the dialysis input.
     const result = calculateEthanolDosing(testCase.input);
     const metrics: ValidationMetric[] = [
       metric("Oplaaddosis", "mg", testCase.expected.loadingMg, result.loadingDose.mg),
-      metric("Oplaaddosis", "ml", testCase.expected.loadingMl, result.loadingDose.ml),
       metric(
         "Onderhoudsdosering",
         "mg/uur",
         testCase.expected.maintenanceMgPerHour,
         result.maintenanceDose.mgPerHour,
       ),
-      metric(
-        "Onderhoudsdosering",
-        "ml/uur",
-        testCase.expected.maintenanceMlPerHour,
-        result.maintenanceDose.mlPerHour,
-      ),
-      metric(
-        "Onderhoud tijdens dialyse",
-        "mg/uur",
-        testCase.expected.dialysisMaintenanceMgPerHour,
-        result.dialysisMaintenanceDose.mgPerHour,
-      ),
-      metric(
-        "Onderhoud tijdens dialyse",
-        "ml/uur",
-        testCase.expected.dialysisMaintenanceMlPerHour,
-        result.dialysisMaintenanceDose.mlPerHour,
-      ),
     ];
+
+    if (testCase.includeDialysis) {
+      metrics.push(
+        metric(
+          "Onderhoud tijdens dialyse",
+          "mg/uur",
+          testCase.expected.dialysisMaintenanceMgPerHour,
+          result.dialysisMaintenanceDose.mgPerHour,
+        ),
+      );
+    }
 
     return {
       id: testCase.id,
       title: testCase.title,
-      source: testCase.source,
       inputSummary: testCase.inputSummary,
+      formulas: testCase.formulas,
+      note: testCase.note,
       metrics,
       pass: metrics.every((entry) => entry.pass),
     };

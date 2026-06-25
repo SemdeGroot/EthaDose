@@ -51,8 +51,8 @@ export default function VoorwaardenPage() {
 
       <ContentSection title="Geen garantie en geen aansprakelijkheid">
         <p>
-          De berekeningen zijn met zorg gebouwd en getoetst aan de
-          bronspreadsheet en het bronartikel (zie{" "}
+          De berekeningen zijn met zorg gebouwd en getoetst aan de gepubliceerde
+          formules van het bronartikel (zie{" "}
           <Link href="/validatie/" className="text-primary underline-offset-4 hover:underline">
             validatie
           </Link>

@@ -47,9 +47,8 @@ import { REFERENCE, SOURCE_SECTIONS } from "./content";
 
 type TargetMode = "1000" | "1500" | "custom";
 
-const DEFAULT_INFUSION = formatOneDecimal(
-  DEFAULT_CALCULATOR_SETTINGS.infusionConcentrationGPerL,
-);
+const DEFAULT_ETHANOL_GRAM = "50";
+const DEFAULT_TOTAL_VOLUME_ML = "500";
 
 export function CalculatorScreen() {
   const [weightKg, setWeightKg] = React.useState("70");
@@ -59,19 +58,26 @@ export function CalculatorScreen() {
   const [dialysis, setDialysis] = React.useState(false);
   const [targetMode, setTargetMode] = React.useState<TargetMode>("1000");
   const [customTargetEthanolMgPerL, setCustomTargetEthanolMgPerL] =
-    React.useState("");
+    React.useState("1000");
   const [volumeOfDistributionProfile, setVolumeOfDistributionProfile] =
     React.useState<VolumeOfDistributionProfileId>("male");
-  const [infusionConcentrationGPerL, setInfusionConcentrationGPerL] =
-    React.useState(DEFAULT_INFUSION);
+  const [ethanolGram, setEthanolGram] = React.useState(DEFAULT_ETHANOL_GRAM);
+  const [totalVolumeMl, setTotalVolumeMl] = React.useState(
+    DEFAULT_TOTAL_VOLUME_ML,
+  );
   const [sourceOpen, setSourceOpen] = React.useState(false);
 
   const parsedWeight = parseDecimalInput(weightKg);
   const parsedEthanol = parseDecimalInput(currentEthanolMgPerL);
   const parsedCustomTarget = parseDecimalInput(customTargetEthanolMgPerL);
-  const parsedInfusionConcentration = parseDecimalInput(
-    infusionConcentrationGPerL,
-  );
+  const parsedEthanolGram = parseDecimalInput(ethanolGram);
+  const parsedTotalVolumeMl = parseDecimalInput(totalVolumeMl);
+  const infusionConcentrationGPerL =
+    parsedEthanolGram !== null &&
+    parsedTotalVolumeMl !== null &&
+    parsedTotalVolumeMl > 0
+      ? parsedEthanolGram / (parsedTotalVolumeMl / 1000)
+      : null;
   const targetEthanolMgPerL =
     targetMode === "custom" ? parsedCustomTarget : Number(targetMode);
   const volumeOfDistributionLPerKg =
@@ -82,14 +88,14 @@ export function CalculatorScreen() {
       targetEthanolMgPerL ?? DEFAULT_CALCULATOR_SETTINGS.targetEthanolMgPerL,
     volumeOfDistributionLPerKg,
     infusionConcentrationGPerL:
-      parsedInfusionConcentration ??
+      infusionConcentrationGPerL ??
       DEFAULT_CALCULATOR_SETTINGS.infusionConcentrationGPerL,
   };
   const settingsAreValid =
     targetEthanolMgPerL !== null &&
     targetEthanolMgPerL > 0 &&
-    parsedInfusionConcentration !== null &&
-    parsedInfusionConcentration > 0;
+    infusionConcentrationGPerL !== null &&
+    infusionConcentrationGPerL > 0;
   const canCalculate =
     parsedWeight !== null &&
     parsedWeight > 0 &&
@@ -102,9 +108,9 @@ export function CalculatorScreen() {
       drinkerStatus !== "nonDrinker" ||
       dialysis ||
       targetMode !== "1000" ||
-      customTargetEthanolMgPerL.trim() ||
       volumeOfDistributionProfile !== "male" ||
-      infusionConcentrationGPerL !== DEFAULT_INFUSION,
+      ethanolGram !== DEFAULT_ETHANOL_GRAM ||
+      totalVolumeMl !== DEFAULT_TOTAL_VOLUME_ML,
   );
   const result =
     canCalculate && parsedWeight !== null && parsedEthanol !== null
@@ -124,9 +130,10 @@ export function CalculatorScreen() {
     setDrinkerStatus("nonDrinker");
     setDialysis(false);
     setTargetMode("1000");
-    setCustomTargetEthanolMgPerL("");
+    setCustomTargetEthanolMgPerL("1000");
     setVolumeOfDistributionProfile("male");
-    setInfusionConcentrationGPerL(DEFAULT_INFUSION);
+    setEthanolGram(DEFAULT_ETHANOL_GRAM);
+    setTotalVolumeMl(DEFAULT_TOTAL_VOLUME_ML);
   };
 
   return (
@@ -222,13 +229,16 @@ export function CalculatorScreen() {
                 targetMode={targetMode}
                 customTargetEthanolMgPerL={customTargetEthanolMgPerL}
                 volumeOfDistributionProfile={volumeOfDistributionProfile}
+                ethanolGram={ethanolGram}
+                totalVolumeMl={totalVolumeMl}
                 infusionConcentrationGPerL={infusionConcentrationGPerL}
                 onTargetModeChange={setTargetMode}
                 onCustomTargetChange={setCustomTargetEthanolMgPerL}
                 onVolumeOfDistributionProfileChange={
                   setVolumeOfDistributionProfile
                 }
-                onInfusionConcentrationChange={setInfusionConcentrationGPerL}
+                onEthanolGramChange={setEthanolGram}
+                onTotalVolumeChange={setTotalVolumeMl}
               />
 
               {hasInput ? (
@@ -381,35 +391,47 @@ function DoseSettings({
   targetMode,
   customTargetEthanolMgPerL,
   volumeOfDistributionProfile,
+  ethanolGram,
+  totalVolumeMl,
   infusionConcentrationGPerL,
   onTargetModeChange,
   onCustomTargetChange,
   onVolumeOfDistributionProfileChange,
-  onInfusionConcentrationChange,
+  onEthanolGramChange,
+  onTotalVolumeChange,
 }: {
   targetMode: TargetMode;
   customTargetEthanolMgPerL: string;
   volumeOfDistributionProfile: VolumeOfDistributionProfileId;
-  infusionConcentrationGPerL: string;
+  ethanolGram: string;
+  totalVolumeMl: string;
+  infusionConcentrationGPerL: number | null;
   onTargetModeChange: (value: TargetMode) => void;
   onCustomTargetChange: (value: string) => void;
   onVolumeOfDistributionProfileChange: (
     value: VolumeOfDistributionProfileId,
   ) => void;
-  onInfusionConcentrationChange: (value: string) => void;
+  onEthanolGramChange: (value: string) => void;
+  onTotalVolumeChange: (value: string) => void;
 }) {
   const parsedCustomTarget = parseDecimalInput(customTargetEthanolMgPerL);
-  const parsedInfusionConcentration = parseDecimalInput(
-    infusionConcentrationGPerL,
-  );
+  const parsedEthanolGram = parseDecimalInput(ethanolGram);
+  const parsedTotalVolumeMl = parseDecimalInput(totalVolumeMl);
+  const volumeOfDistributionLPerKg =
+    VOLUME_DISTRIBUTION_PROFILES[volumeOfDistributionProfile]
+      .volumeOfDistributionLPerKg;
   const targetError =
     targetMode === "custom" &&
     (parsedCustomTarget === null || parsedCustomTarget <= 0)
       ? "Vul een streefconcentratie groter dan 0 in."
       : undefined;
-  const infusionError =
-    parsedInfusionConcentration === null || parsedInfusionConcentration <= 0
-      ? "Vul een infuusconcentratie groter dan 0 in."
+  const ethanolGramError =
+    parsedEthanolGram === null || parsedEthanolGram <= 0
+      ? "Vul een hoeveelheid groter dan 0 in."
+      : undefined;
+  const totalVolumeError =
+    parsedTotalVolumeMl === null || parsedTotalVolumeMl <= 0
+      ? "Vul een volume groter dan 0 in."
       : undefined;
 
   return (
@@ -447,28 +469,52 @@ function DoseSettings({
 
       <InlineNotice
         icon={Info}
-        text="Bij 1000 mg/L is circa 90% van de methanoloxidatie geremd. Lokale protocollen kunnen hoger zijn."
+        text="1000 mg/L is de in de praktijk nagestreefde ethanolconcentratie uit het artikel. Lokale protocollen kunnen een hogere streefwaarde gebruiken."
       />
 
-      <SegmentedControl
-        label="Verdelingsvolume"
-        value={volumeOfDistributionProfile}
-        options={[
-          { value: "male", label: "Man 0,7 L/kg" },
-          { value: "female", label: "Vrouw 0,6 L/kg" },
-        ]}
-        onChange={onVolumeOfDistributionProfileChange}
-      />
+      <div className="flex flex-col gap-2">
+        <SegmentedControl
+          label="Verdelingsvolume"
+          value={volumeOfDistributionProfile}
+          options={[
+            { value: "male", label: "Man" },
+            { value: "female", label: "Vrouw" },
+          ]}
+          onChange={onVolumeOfDistributionProfileChange}
+        />
+        <InlineNotice
+          icon={Info}
+          text={`Vd ${formatOneDecimal(volumeOfDistributionLPerKg)} L/kg bepaalt de oplaaddosis.`}
+        />
+      </div>
 
-      <NumberField
-        id="infusion"
-        label="Infuusconcentratie"
-        unit="g/L"
-        value={infusionConcentrationGPerL}
-        onChange={onInfusionConcentrationChange}
-        error={infusionError}
-        helper="Standaard 50 ml ethanol 96% v/v in 300 ml totaal."
-      />
+      <div className="flex flex-col gap-2">
+        <span className="text-body-sm font-semibold text-foreground">
+          Infuusbereiding
+        </span>
+        <NumberField
+          id="ethanol-gram"
+          label="Ethanol"
+          unit="g"
+          value={ethanolGram}
+          onChange={onEthanolGramChange}
+          error={ethanolGramError}
+        />
+        <NumberField
+          id="total-volume"
+          label="Totaal volume"
+          unit="ml"
+          value={totalVolumeMl}
+          onChange={onTotalVolumeChange}
+          error={totalVolumeError}
+        />
+        {infusionConcentrationGPerL !== null ? (
+          <InlineNotice
+            icon={Info}
+            text={`Dit is ${formatGPerL(infusionConcentrationGPerL)} (${formatOneDecimal(infusionConcentrationGPerL / 10)}%). Pas aan naar je eigen bereiding.`}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

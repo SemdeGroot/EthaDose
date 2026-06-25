@@ -53,9 +53,9 @@ export const CALCULATOR_CONSTANTS = {
   kmMgPerL: 138,
   volumeOfDistributionLPerKg: 0.6,
   dialysisClearanceMgKgHour: 150,
-  ethanolStockMg: 38000,
-  infusionVolumeMl: 300,
-  infusionConcentrationGPerL: 38000 / 300,
+  ethanolStockMg: 50000,
+  infusionVolumeMl: 500,
+  infusionConcentrationGPerL: 50000 / 500,
 } as const;
 
 export const TARGET_ETHANOL_OPTIONS_MG_PER_L = [1000, 1500] as const;

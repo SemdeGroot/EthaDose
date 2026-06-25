@@ -12,7 +12,7 @@ import { SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Validatie - AlcoTox",
   description:
-    "Validatie van AlcoTox: de berekeningen worden live vergeleken met de waarden uit de bronspreadsheet en het artikel van Touw et al. (1993).",
+    "Validatie van AlcoTox. De berekeningen worden live vergeleken met de uitkomsten van de gepubliceerde formules van Touw et al. (1993), met de formules uitgeschreven om na te rekenen.",
   alternates: { canonical: `${SITE_URL}/validatie/` },
 };
 
@@ -28,7 +28,7 @@ export default function ValidatiePage() {
   return (
     <ContentPage
       title="Validatie"
-      intro="AlcoTox reproduceert de berekeningen uit de bronspreadsheet en het artikel. De onderstaande uitkomsten zijn live berekend met dezelfde functies als de calculator en vergeleken met de gedocumenteerde bronwaarden. Zo kun je controleren dat deze versie de bron exact reproduceert."
+      intro="AlcoTox volgt de formules uit het artikel van Touw et al. (1993). Het eerste voorbeeld is de casus uit het artikel zelf. De andere voorbeelden passen dezelfde formules toe op andere profielen en op dialyse. Alle uitkomsten zijn live berekend met dezelfde functies als de calculator, met de formules uitgeschreven zodat je ze met een rekenmachine kunt narekenen."
     >
       <div
         className={`flex items-center gap-3 rounded-lg border p-4 ${
@@ -55,27 +55,43 @@ export default function ValidatiePage() {
               : `${passedChecks} van ${totalChecks} controles geslaagd`}
           </span>
           <span className="text-body-sm text-muted-foreground">
-            Verwachte waarden uit context/EtOHcalc.XLS, berekend op het moment
-            van de build.
+            Berekend tijdens de build met dezelfde functies als de calculator.
           </span>
         </div>
       </div>
 
-      <ContentSection title="Parameters">
-        <ul className="flex list-disc flex-col gap-1 pl-5">
-          <li>Michaelis-constante Km: 138 mg/L.</li>
-          <li>Streefconcentratie (bron): 1000 mg/L.</li>
-          <li>Verdelingsvolume: 0,6 L/kg (vrouw) of 0,7 L/kg (man).</li>
-          <li>Vmax: 75 mg/kg/uur (niet-drinker), 175 mg/kg/uur (chronische drinker).</li>
-          <li>Extra klaring tijdens dialyse: 150 mg/kg/uur.</li>
-          <li>Infuusconcentratie: 38000 mg in 300 ml (126,67 g/L).</li>
-        </ul>
+      <ContentSection title="Formules">
+        <p>Voor elke uitkomst geldt:</p>
+        <div className="rounded-md bg-panel-soft p-3 font-mono text-caption text-foreground">
+          <p>Oplaaddosis = Vd x gewicht x max(0, Cdoel - Cethanol)</p>
+          <p>Onderhoud = 1000 x Vmax x gewicht / (Km + Cdoel)</p>
+          <p>Onderhoud bij dialyse = 1000 x (Vmax + 150) x gewicht / (Km + Cdoel)</p>
+          <p>Omrekening naar ml = dosis ethanol (mg) / infuusconcentratie (g/L)</p>
+        </div>
+        <p>
+          Daarbij is Km 138 mg/L en de streefconcentratie 1000 mg/L. Vmax is
+          75 mg/kg/uur voor een niet-drinker en 175 mg/kg/uur voor een chronische
+          drinker. Vd is 0,7 L/kg voor een man en 0,6 L/kg voor een vrouw. De
+          ml-uitkomsten zijn afhankelijk van de gekozen bereiding. Standaard rekent
+          AlcoTox met 100 g/L, oftewel 50 g ethanol in 500 ml totaal volume.
+        </p>
       </ContentSection>
 
       {results.map((testCase) => (
         <ContentSection key={testCase.id} title={testCase.title}>
           <p>{testCase.inputSummary}</p>
-          <p className="text-caption">Bron: {testCase.source}</p>
+
+          <div className="flex flex-col gap-1 rounded-md bg-panel-soft p-3 font-mono text-caption text-foreground">
+            {testCase.formulas.map((formula, index) => (
+              <p key={index} className="break-words">
+                {formula}
+              </p>
+            ))}
+          </div>
+
+          {testCase.note ? (
+            <p className="text-caption text-muted-foreground">{testCase.note}</p>
+          ) : null}
 
           <ul className="mt-2 divide-y divide-border overflow-hidden rounded-lg border border-border">
             {testCase.metrics.map((m, index) => (
@@ -119,9 +135,9 @@ export default function ValidatiePage() {
       <ContentSection title="Automatische tests">
         <p>
           Naast deze pagina draait bij elke build een geautomatiseerde testset
-          (Vitest) die dezelfde bronwaarden en aanvullende randgevallen
-          controleert, waaronder het afkappen van de oplaaddosis op of boven de
-          streefconcentratie en het weigeren van ongeldige invoer.
+          die dezelfde waarden en aanvullende randgevallen controleert. Daaronder
+          vallen het afkappen van de oplaaddosis op of boven de streefconcentratie
+          en het weigeren van ongeldige invoer.
         </p>
       </ContentSection>
 

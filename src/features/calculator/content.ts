@@ -22,7 +22,7 @@ export const SOURCE_SECTIONS: SourceSection[] = [
     title: "Waarom ethanol",
     paragraphs: [
       "Ethanol concurreert met methanol en ethyleenglycol om alcoholdehydrogenase. Bij voldoende ethanol worden minder toxische metabolieten gevormd. Daarom wordt ethanol als antidotum gebruikt.",
-      "Bij ernstige intoxicaties kan dialyse nodig zijn; dialyse verhoogt de klaring. AlcoTox berekent daarom een aparte onderhoudsdosering tijdens dialyse.",
+      "Bij ernstige intoxicaties kan dialyse nodig zijn. Omdat dialyse de klaring verhoogt, berekent AlcoTox een aparte onderhoudsdosering tijdens dialyse.",
     ],
   },
   {
@@ -36,7 +36,7 @@ export const SOURCE_SECTIONS: SourceSection[] = [
     title: "Rekenmethode",
     paragraphs: [
       "De streefconcentratie is 1000 mg/L. De oplaaddosis vult alleen het verschil aan tussen de gemeten en de gekozen streefwaarde. Ligt de gemeten waarde daar al op of boven, dan toont AlcoTox geen oplaaddosis.",
-      "De onderhoudsdosering gebruikt gewicht, Vmax en Km. Bij chronisch alcoholgebruik geldt een hogere Vmax; bij dialyse telt extra klaring mee. De infuusconcentratie bepaalt de omrekening van mg ethanol naar ml.",
+      "De onderhoudsdosering gebruikt gewicht, Vmax en Km. Bij chronisch alcoholgebruik geldt een hogere Vmax. Bij dialyse telt extra klaring mee. De infuusconcentratie bepaalt de omrekening van mg ethanol naar ml.",
     ],
   },
   {
@@ -63,7 +63,7 @@ export const FAQ: { question: string; answer: string }[] = [
   {
     question: "Waarom is de streefconcentratie 1000 mg/L?",
     answer:
-      "1000 mg/L (ongeveer 1,0 promille) is de streefwaarde uit het bronartikel en de spreadsheet. Lokale protocollen kunnen een hogere streefwaarde gebruiken, bijvoorbeeld 1,5 promille; in AlcoTox is de streefconcentratie daarom instelbaar.",
+      "1000 mg/L (ongeveer 1,0 promille) is de streefwaarde uit het bronartikel. Lokale protocollen kunnen een hogere streefwaarde gebruiken, bijvoorbeeld 1,5 promille. In AlcoTox is de streefconcentratie daarom instelbaar.",
   },
   {
     question: "Hoe berekent AlcoTox de onderhoudsdosering?",

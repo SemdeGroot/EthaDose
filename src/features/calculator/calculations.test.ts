@@ -9,7 +9,7 @@ import {
 } from "./calculations";
 
 describe("ethanol dosing calculations", () => {
-  it("matches the non-drinker spreadsheet example", () => {
+  it("matches the non-drinker reference example", () => {
     const result = calculateEthanolDosing({
       weightKg: 65,
       currentEthanolMgPerL: 800,
@@ -18,15 +18,15 @@ describe("ethanol dosing calculations", () => {
     });
 
     expect(result.loadingDose.mg).toBeCloseTo(7800, 10);
-    expect(result.loadingDose.ml).toBeCloseTo(61.5789473684211, 10);
+    expect(result.loadingDose.ml).toBeCloseTo(78, 10);
     expect(result.maintenanceDose.mgPerHour).toBeCloseTo(4283.83128295255, 10);
-    expect(result.maintenanceDose.mlPerHour).toBeCloseTo(33.8197206548885, 10);
+    expect(result.maintenanceDose.mlPerHour).toBeCloseTo(42.8383128295255, 10);
     expect(result.dialysisMaintenanceDose.mgPerHour).toBeCloseTo(12851.4938488576, 10);
-    expect(result.dialysisMaintenanceDose.mlPerHour).toBeCloseTo(101.459161964666, 10);
+    expect(result.dialysisMaintenanceDose.mlPerHour).toBeCloseTo(128.514938488576, 10);
     expect(result.selectedMaintenanceDose).toBe(result.maintenanceDose);
   });
 
-  it("matches the chronic drinker spreadsheet example", () => {
+  it("matches the chronic drinker reference example", () => {
     const result = calculateEthanolDosing({
       weightKg: 82,
       currentEthanolMgPerL: 800,
@@ -35,11 +35,11 @@ describe("ethanol dosing calculations", () => {
     });
 
     expect(result.loadingDose.mg).toBeCloseTo(9840, 10);
-    expect(result.loadingDose.ml).toBeCloseTo(77.6842105263158, 10);
+    expect(result.loadingDose.ml).toBeCloseTo(98.4, 10);
     expect(result.maintenanceDose.mgPerHour).toBeCloseTo(12609.841827768, 10);
-    expect(result.maintenanceDose.mlPerHour).toBeCloseTo(99.5513828508001, 10);
+    expect(result.maintenanceDose.mlPerHour).toBeCloseTo(126.09841827768, 10);
     expect(result.dialysisMaintenanceDose.mgPerHour).toBeCloseTo(23418.2776801406, 10);
-    expect(result.dialysisMaintenanceDose.mlPerHour).toBeCloseTo(184.881139580057, 10);
+    expect(result.dialysisMaintenanceDose.mlPerHour).toBeCloseTo(234.182776801406, 10);
     expect(result.selectedMaintenanceDose).toBe(result.dialysisMaintenanceDose);
   });
 
@@ -52,7 +52,7 @@ describe("ethanol dosing calculations", () => {
   });
 
   it("converts mg ethanol to ml infusion solution", () => {
-    expect(convertMgToInfusionMl(7800)).toBeCloseTo(61.5789473684211, 10);
+    expect(convertMgToInfusionMl(7800)).toBeCloseTo(78, 10);
   });
 
   it("clamps loading dose to zero at or above target concentration", () => {
