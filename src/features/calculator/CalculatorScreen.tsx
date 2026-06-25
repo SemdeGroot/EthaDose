@@ -152,7 +152,7 @@ export function CalculatorScreen() {
             </div>
             <div className="flex flex-1 flex-col gap-1">
               <h1 className="text-title-xl font-bold text-foreground">
-                AlcoTox
+                EthaDose
               </h1>
               <p className="text-caption text-icon-muted">
                 Ethanol doseringshulp
@@ -220,7 +220,7 @@ export function CalculatorScreen() {
                 {dialysis ? (
                   <InlineNotice
                     icon={Activity}
-                    text={`Tijdens dialyse telt AlcoTox ${CALCULATOR_CONSTANTS.dialysisClearanceMgKgHour} mg/kg/uur extra klaring bij Vmax op.`}
+                    text={`Tijdens dialyse telt EthaDose ${CALCULATOR_CONSTANTS.dialysisClearanceMgKgHour} mg/kg/uur extra klaring bij Vmax op.`}
                   />
                 ) : null}
               </div>
@@ -459,7 +459,7 @@ function DoseSettings({
       {targetMode === "custom" ? (
         <NumberField
           id="custom-target"
-          label="Custom streefconcentratie"
+          label="Streefconcentratie"
           unit="mg/L"
           value={customTargetEthanolMgPerL}
           onChange={onCustomTargetChange}
@@ -719,7 +719,7 @@ function FormulaPanel({
         {currentEthanolMgPerL !== null &&
         currentEthanolMgPerL >= settings.targetEthanolMgPerL ? (
           <p className="text-body-sm text-muted-foreground">
-            Boven de streefconcentratie is doseren niet nodig. AlcoTox toont dan
+            Boven de streefconcentratie is doseren niet nodig. EthaDose toont dan
             geen oplaad- en geen onderhoudsdosering.
           </p>
         ) : null}
@@ -789,7 +789,7 @@ function SourceModal({
 
           <div className="rounded-md bg-panel-soft p-3">
             <p className="text-caption text-muted-foreground">
-              Deze tekst verklaart de berekening. AlcoTox is geen
+              Deze tekst verklaart de berekening. EthaDose is geen
               behandelprotocol.
             </p>
           </div>
@@ -818,7 +818,7 @@ function Footer() {
             <Calculator className="size-4 text-primary-dark" strokeWidth={1.75} />
           </span>
           <span className="text-body-sm font-semibold text-foreground">
-            AlcoTox
+            EthaDose
           </span>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-1.5">
@@ -841,7 +841,7 @@ function Footer() {
 
       <div className="flex flex-col gap-1 border-t border-border pt-4">
         <p className="text-caption text-muted-foreground">
-          AlcoTox is een berekeningshulpmiddel, geen behandelprotocol.
+          EthaDose is een berekeningshulpmiddel, geen behandelprotocol.
         </p>
         <p className="text-caption text-muted-foreground">Bron: {REFERENCE}</p>
       </div>

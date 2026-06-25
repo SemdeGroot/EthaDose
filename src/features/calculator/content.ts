@@ -22,20 +22,20 @@ export const SOURCE_SECTIONS: SourceSection[] = [
     title: "Waarom ethanol",
     paragraphs: [
       "Ethanol concurreert met methanol en ethyleenglycol om alcoholdehydrogenase. Bij voldoende ethanol worden minder toxische metabolieten gevormd. Daarom wordt ethanol als antidotum gebruikt.",
-      "Bij ernstige intoxicaties kan dialyse nodig zijn. Omdat dialyse de klaring verhoogt, berekent AlcoTox een aparte onderhoudsdosering tijdens dialyse.",
+      "Bij ernstige intoxicaties kan dialyse nodig zijn. Omdat dialyse de klaring verhoogt, berekent EthaDose een aparte onderhoudsdosering tijdens dialyse.",
     ],
   },
   {
     title: "Wanneer gebruiken",
     paragraphs: [
-      "Gebruik AlcoTox wanneer een ethanolspiegel bekend is en je een dosering wilt omrekenen naar een infuusvolume. De app berekent de oplaaddosis en de onderhoudsdosering, ook tijdens dialyse.",
+      "Gebruik EthaDose wanneer een ethanolspiegel bekend is en je een dosering wilt omrekenen naar een infuusvolume. De app berekent de oplaaddosis en de onderhoudsdosering, ook tijdens dialyse.",
       "De app bepaalt niet of ethanol of dialyse nodig is. Die beslissing blijft bij het lokale protocol en het klinisch oordeel.",
     ],
   },
   {
     title: "Rekenmethode",
     paragraphs: [
-      "De streefconcentratie is 1000 mg/L. De oplaaddosis vult alleen het verschil aan tussen de gemeten en de gekozen streefwaarde. Ligt de gemeten waarde daar al op of boven, dan toont AlcoTox geen oplaaddosis.",
+      "De streefconcentratie is 1000 mg/L. De oplaaddosis vult alleen het verschil aan tussen de gemeten en de gekozen streefwaarde. Ligt de gemeten waarde daar al op of boven, dan toont EthaDose geen oplaaddosis.",
       "De onderhoudsdosering gebruikt gewicht, Vmax en Km. Bij chronisch alcoholgebruik geldt een hogere Vmax. Bij dialyse telt extra klaring mee. De infuusconcentratie bepaalt de omrekening van mg ethanol naar ml.",
     ],
   },
@@ -51,29 +51,29 @@ export const SOURCE_SECTIONS: SourceSection[] = [
 // Concise question/answer pairs for FAQPage structured data (GEO).
 export const FAQ: { question: string; answer: string }[] = [
   {
-    question: "Waarvoor dient AlcoTox?",
+    question: "Waarvoor dient EthaDose?",
     answer:
-      "AlcoTox berekent een oplaaddosis en onderhoudsdosering ethanol als antidotum bij een methanol- of ethyleenglycolintoxicatie, en rekent de dosis om naar een infuusvolume. Het is een berekeningshulpmiddel, geen behandelprotocol.",
+      "EthaDose berekent een oplaaddosis en onderhoudsdosering ethanol als antidotum bij een methanol- of ethyleenglycolintoxicatie, en rekent de dosis om naar een infuusvolume. Het is een berekeningshulpmiddel, geen behandelprotocol.",
   },
   {
-    question: "Hoe berekent AlcoTox de oplaaddosis ethanol?",
+    question: "Hoe berekent EthaDose de oplaaddosis ethanol?",
     answer:
       "De oplaaddosis is het verdelingsvolume maal het gewicht maal het verschil tussen de streefconcentratie en de gemeten ethanolconcentratie: Vd x gewicht x max(0, Cdoel - Cethanol). Ligt de gemeten ethanolwaarde al op of boven de streefwaarde, dan is geen oplaaddosis nodig.",
   },
   {
     question: "Waarom is de streefconcentratie 1000 mg/L?",
     answer:
-      "1000 mg/L (ongeveer 1,0 promille) is de streefwaarde uit het bronartikel. Lokale protocollen kunnen een hogere streefwaarde gebruiken, bijvoorbeeld 1,5 promille. In AlcoTox is de streefconcentratie daarom instelbaar.",
+      "1000 mg/L (ongeveer 1,0 promille) is de streefwaarde uit het bronartikel. Lokale protocollen kunnen een hogere streefwaarde gebruiken, bijvoorbeeld 1,5 promille. In EthaDose is de streefconcentratie daarom instelbaar.",
   },
   {
-    question: "Hoe berekent AlcoTox de onderhoudsdosering?",
+    question: "Hoe berekent EthaDose de onderhoudsdosering?",
     answer:
       "De onderhoudsdosering volgt Michaelis-Menten-kinetiek: 1000 x Vmax x gewicht / (Km + Cdoel), met Km 138 mg/L. Voor chronische drinkers wordt een hogere Vmax gebruikt dan voor niet-drinkers.",
   },
   {
     question: "Wat verandert er tijdens dialyse?",
     answer:
-      "Tijdens dialyse telt AlcoTox extra klaring (150 mg/kg/uur) op bij de Vmax, waardoor een hogere onderhoudsdosering nodig is om de streefconcentratie te behouden.",
+      "Tijdens dialyse telt EthaDose extra klaring (150 mg/kg/uur) op bij de Vmax, waardoor een hogere onderhoudsdosering nodig is om de streefconcentratie te behouden.",
   },
   {
     question:

@@ -5,9 +5,9 @@ import { ContentPage, ContentSection } from "@/components/ContentPage";
 import { LEGAL_LAST_UPDATED, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Cookieverklaring - AlcoTox",
+  title: "Cookieverklaring - EthaDose",
   description:
-    "Cookieverklaring van AlcoTox. AlcoTox gebruikt geen tracking-, analyse- of advertentiecookies, dus cookietoestemming is niet nodig.",
+    "Cookieverklaring van EthaDose. EthaDose gebruikt geen tracking-, analyse- of advertentiecookies, dus cookietoestemming is niet nodig.",
   alternates: { canonical: `${SITE_URL}/cookies/` },
 };
 
@@ -15,11 +15,11 @@ export default function CookiesPage() {
   return (
     <ContentPage
       title="Cookieverklaring"
-      intro={`Kort en duidelijk: AlcoTox plaatst geen tracking-cookies. Laatst bijgewerkt: ${LEGAL_LAST_UPDATED}.`}
+      intro={`EthaDose plaatst geen tracking-cookies. Laatst bijgewerkt: ${LEGAL_LAST_UPDATED}.`}
     >
       <ContentSection title="Geen tracking-cookies">
         <p>
-          AlcoTox gebruikt geen cookies voor tracking, analyse of advertenties en
+          EthaDose gebruikt geen cookies voor tracking, analyse of advertenties en
           plaatst geen cookies van derden. Daarom is er geen cookiebanner of
           cookietoestemming nodig.
         </p>
@@ -42,7 +42,7 @@ export default function CookiesPage() {
           >
             privacyverklaring
           </Link>{" "}
-          voor hoe AlcoTox met gegevens omgaat.
+          voor hoe EthaDose met gegevens omgaat.
         </p>
       </ContentSection>
     </ContentPage>

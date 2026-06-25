@@ -1,6 +1,6 @@
-# AlcoTox
+# EthaDose
 
-> AlcoTox is een Nederlandstalige, op-het-apparaat rekenhulp die de oplaaddosis en onderhoudsdosering ethanol berekent als antidotum bij methanol- of ethyleenglycolintoxicatie, en de dosis omrekent naar infuusvolume. Het is een berekeningshulpmiddel, geen behandelprotocol.
+> EthaDose is een Nederlandstalige, op-het-apparaat rekenhulp die de oplaaddosis en onderhoudsdosering ethanol berekent als antidotum bij methanol- of ethyleenglycolintoxicatie, en de dosis omrekent naar infuusvolume. Het is een berekeningshulpmiddel, geen behandelprotocol.
 
 ## Kernfeiten
 
@@ -18,4 +18,4 @@
 
 ## Belangrijk
 
-- AlcoTox bepaalt niet of ethanol of dialyse nodig is. Die beslissing blijft onderdeel van het lokale protocol en het klinisch oordeel.
+- EthaDose bepaalt niet of ethanol of dialyse nodig is. Die beslissing blijft onderdeel van het lokale protocol en het klinisch oordeel.

@@ -1,8 +1,8 @@
-# AlcoTox Agent Guide
+# EthaDose Agent Guide
 
 ## Project
 
-AlcoTox is a Next.js (App Router) web app for a local ethanol antidote calculator based on the spreadsheet and article in `context/`. It is built as a static export and deployed as static files on Netlify.
+EthaDose is a Next.js (App Router) web app for a local ethanol antidote calculator based on the spreadsheet and article in `context/`. It is built as a static export and deployed as static files on Netlify.
 
 ## General Rules
 
@@ -51,7 +51,7 @@ AlcoTox is a Next.js (App Router) web app for a local ethanol antidote calculato
 - Page metadata (title, description, Open Graph, canonical, robots) lives in `app/layout.tsx`.
 - JSON-LD structured data lives in `app/page.tsx`; FAQ/source copy is shared from `src/features/calculator/content.ts`.
 - `app/robots.ts`, `app/sitemap.ts`, and `public/llms.txt` cover crawler and AI-engine access.
-- The canonical site URL comes from `src/lib/site.ts` (`NEXT_PUBLIC_SITE_URL`, default `https://alcotox.netlify.app`).
+- The canonical site URL comes from `src/lib/site.ts` (`NEXT_PUBLIC_SITE_URL`, default `https://ethadose.netlify.app`).
 
 ## Verification
 

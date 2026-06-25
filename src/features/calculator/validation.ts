@@ -58,7 +58,7 @@ const CASES: ValidationCase[] = [
       "Oplaaddosis = Vd x gewicht x (Cdoel - Cethanol) = 0,6 x 12 x (1000 - 600) = 2880 mg",
       "Onderhoud = 1000 x Vmax x gewicht / (Km + Cdoel) = 1000 x 75 x 12 / (138 + 1000) = 790,86 mg/uur",
     ],
-    note: "Het artikel toont een oplaaddosis van 2880 mg en rondt de onderhoudsdosering af naar 800 mg/uur. AlcoTox toont de onafgeronde waarde.",
+    note: "Het artikel toont een oplaaddosis van 2880 mg en rondt de onderhoudsdosering af naar 800 mg/uur. EthaDose toont de onafgeronde waarde.",
     includeDialysis: false,
     input: {
       weightKg: 12,

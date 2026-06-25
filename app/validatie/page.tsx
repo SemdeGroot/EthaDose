@@ -10,9 +10,9 @@ import {
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Validatie - AlcoTox",
+  title: "Validatie - EthaDose",
   description:
-    "Validatie van AlcoTox. De berekeningen worden live vergeleken met de uitkomsten van de gepubliceerde formules van Touw et al. (1993), met de formules uitgeschreven om na te rekenen.",
+    "Validatie van EthaDose. De berekeningen worden live vergeleken met de uitkomsten van de gepubliceerde formules van Touw et al. (1993), met de formules uitgeschreven om na te rekenen.",
   alternates: { canonical: `${SITE_URL}/validatie/` },
 };
 
@@ -28,7 +28,7 @@ export default function ValidatiePage() {
   return (
     <ContentPage
       title="Validatie"
-      intro="AlcoTox volgt de formules uit het artikel van Touw et al. (1993). Het eerste voorbeeld is de casus uit het artikel zelf. De andere voorbeelden passen dezelfde formules toe op andere profielen en op dialyse. Alle uitkomsten zijn live berekend met dezelfde functies als de calculator, met de formules uitgeschreven zodat je ze met een rekenmachine kunt narekenen."
+      intro="EthaDose volgt de formules uit het artikel van Touw et al. (1993). Het eerste voorbeeld is de casus uit het artikel zelf. De andere voorbeelden passen dezelfde formules toe op andere profielen en op dialyse. Alle uitkomsten zijn live berekend met dezelfde functies als de calculator, met de formules uitgeschreven zodat je ze met een rekenmachine kunt narekenen."
     >
       <div
         className={`flex items-center gap-3 rounded-lg border p-4 ${
@@ -73,7 +73,7 @@ export default function ValidatiePage() {
           75 mg/kg/uur voor een niet-drinker en 175 mg/kg/uur voor een chronische
           drinker. Vd is 0,7 L/kg voor een man en 0,6 L/kg voor een vrouw. De
           ml-uitkomsten zijn afhankelijk van de gekozen bereiding. Standaard rekent
-          AlcoTox met 100 g/L, oftewel 50 g ethanol in 500 ml totaal volume.
+          EthaDose met 100 g/L, oftewel 50 g ethanol in 500 ml totaal volume.
         </p>
       </ContentSection>
 

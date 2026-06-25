@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     "klinische toxicologie",
     "fomepizol alternatief",
   ],
-  authors: [{ name: "AlcoTox" }],
+  authors: [{ name: "EthaDose" }],
   alternates: {
     canonical: "/",
   },
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "AlcoTox - Ethanol doseringscalculator",
+        alt: "EthaDose - Ethanol doseringscalculator",
       },
     ],
   },
