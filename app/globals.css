@@ -1,0 +1,107 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  /* Typeface */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* shadcn semantic roles mapped to the AlcoTox palette */
+  --color-background: #f5f8f7;
+  --color-foreground: #0e1726;
+  --color-card: #ffffff;
+  --color-card-foreground: #0e1726;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0e1726;
+  --color-primary: #2f6f73;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #eaf2f0;
+  --color-secondary-foreground: #1f4f55;
+  --color-muted: #eaf2f0;
+  --color-muted-foreground: #475569;
+  --color-accent: #eaf2f0;
+  --color-accent-foreground: #1f4f55;
+  --color-destructive: #d32f2f;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(15, 23, 42, 0.1);
+  --color-input: rgba(15, 23, 42, 0.1);
+  --color-ring: #2f6f73;
+
+  /* AlcoTox-specific tokens */
+  --color-primary-dark: #1f4f55;
+  --color-primary-soft: rgba(47, 111, 115, 0.12);
+  --color-panel-soft: #eaf2f0;
+  --color-icon-muted: #536176;
+  --color-danger: #d32f2f;
+  --color-danger-soft: rgba(211, 47, 47, 0.14);
+  --color-warning: #df5b17;
+  --color-warning-soft: rgba(223, 91, 23, 0.14);
+  --color-success: #0c8f66;
+  --color-success-soft: rgba(12, 143, 102, 0.14);
+  --color-info: #2f67e1;
+  --color-info-soft: rgba(47, 103, 225, 0.14);
+
+  /* Radius scale (matches the former theme tokens) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  /* Typography variants */
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 21px;
+  --text-body-md: 15px;
+  --text-body-md--line-height: 23px;
+  --text-title-md: 18px;
+  --text-title-md--line-height: 24px;
+  --text-title-md--letter-spacing: -0.2px;
+  --text-title-xl: 28px;
+  --text-title-xl--line-height: 34px;
+  --text-title-xl--letter-spacing: -0.4px;
+
+  /* Subtle on-load reveal */
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  /* Staggered fade-up applied to top-level sections on first paint */
+  .reveal {
+    animation: var(--animate-fade-up);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      animation: none;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 node_modules/
-.expo/
-dist/
-web-build/
+.next/
+out/
+build/
 
 .DS_Store
 *.log
